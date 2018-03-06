@@ -16,6 +16,11 @@ module.exports = function(app) {
     response.render("index");
   });
 
+  // Admin route - renders admin.ejs:
+  app.get("/admin", function(request, response) {
+    response.render("admin");
+  });
+
   // Another example route - responses with JSON object:
   app.get("/users", function(request, response) {
     controller.getControllerMethod(request, response); //<-- CHANGE "controller" variable name(2)
