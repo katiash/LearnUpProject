@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Sockets Test</title>
-        <link rel="stylesheet" href="/stylesheets/style.css">
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript" src="/socket.io/socket.io.js"></script>
-        <script type="text/javascript">
 
-            $(document).ready(function(){
-                //Trigger the 'connection' event in our server!
-                //We are able to call io.connect() below because we received, along with the HTML 
-                //other content from our server, which the server wants us to have.
-                //We link to these resources/files within <head> element.
-                var socket = io.connect();
-  
-                //On DOM 'button' click event, emit a "button_clicked" event to server socket listener:
-                $('button').click(function(){
-                    //On emitting event to server, send along data object {key: value} pair:
-                    socket.emit("button_clicked", {reason: "because I want to learn about sockets!"} );
-                });
-                //Listen to the 'server_response' event from the server:
-                socket.on('server_response', function (data){
-                    //Display 'data' received on the 'client' browser console:
-                    console.log('The server says: ' + data.response);   
-                });
-            })
-        
-        </script>
-    </head>
-    <body>
-        <!-- DOM button element to trigger the client socket "button_clicked" event on .click() -->
-        <button>I AM A BUTTON!</button>
-        <!-- web page goes here -->
-    </body>
+<head>
+    <title>Sockets Test</title>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            //Trigger the 'connection' event in our server!
+            //We are able to call io.connect() below because we received, along with the HTML 
+            //other content from our server, which the server wants us to have.
+            //We link to these resources/files within <head> element.
+            var socket = io.connect();
+
+            //On DOM 'button' click event, emit a "button_clicked" event to server socket listener:
+            $('button').click(function () {
+                //On emitting event to server, send along data object {key: value} pair:
+                socket.emit("button_clicked", { reason: "because I want to learn about sockets!" });
+            });
+            //Listen to the 'server_response' event from the server:
+            socket.on('server_response', function (data) {
+                //Display 'data' received on the 'client' browser console:
+                console.log('The server says: ' + data.response);
+            });
+        })
+
+    </script>
+</head>
+
+<body>
+    <!-- DOM button element to trigger the client socket "button_clicked" event on .click() -->
+    <button>I AM A BUTTON</button>
+    <!-- web page goes here -->
+</body>
+
 </html>
