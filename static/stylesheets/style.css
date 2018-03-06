@@ -35,3 +35,11 @@ table th {
 .close-room {
   display: none;
 }
+
+.userlogin {
+  margin-top: 5%;
+}
+
+.header {
+  text-align: center !important;
+}

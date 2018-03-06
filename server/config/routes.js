@@ -19,6 +19,10 @@ module.exports = function(app) {
   app.get("/admin/dashboard", function(request, response) {
     response.render("dashboard");
   });
+  // Admin route - renders admin.ejs:
+  app.get("/admin", function(request, response) {
+    response.render("admin");
+  });
 
   // Another example route - responses with JSON object:
   app.get("/users", function(request, response) {
