@@ -7,7 +7,7 @@
 // Require controller.js file and set it to a variable:
 // ( Change the "controller" variable name and the controller file name
 // within the 'controllers' directory. )
-var controller = require("../controllers/users.js");
+var users = require("../controllers/users.js");
 
 // Export all routes to server.js:
 module.exports = function(app) {
@@ -18,7 +18,12 @@ module.exports = function(app) {
 
   // Admin route - renders admin.ejs:
   app.get("/admin", function(request, response) {
-    response.render("admin");
+    response.render("admin", { message: request.flash("error") });
+  });
+
+  //Login post route
+  app.post("/login", function(request, response) {
+    users.login(request, response);
   });
 
   // Another example route - responses with JSON object:
