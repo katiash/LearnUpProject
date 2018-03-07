@@ -16,23 +16,29 @@
             <h1>LearnUp Digital Reading Board Login</h1>
         </div>
 
-        <div class="row userlogin">
-            <div class="col-md-4"></div>
-            <form class="col-md-4">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="text" class="form-control" name="email" aria-describedby="helpId" placeholder="Enter your email">
+        <% if (message) { %>
+            <p>
+                <%= message %>
+            </p>
+            <% } %>
+
+                <div class="row userlogin">
+                    <div class="col-md-4"></div>
+                    <form class="col-md-4" method="post" action="/login">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="text" class="form-control" name="email" placeholder="Enter your email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Enter your password</label>
+                            <input type="password" class="form-control" name="password" placeholder="Enter your password">
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" name="Login" id="Login" class="btn btn-primary">Login</button>
+                        </div>
+                    </form>
+                    <div class="col-md-4 "></div>
                 </div>
-                <div class="form-group">
-                    <label for="password">Enter your password</label>
-                    <input type="password" class="form-control" name="password" aria-describedby="helpId" placeholder="Enter your password">
-                </div>
-                <div class="form-group">
-                    <button type="button" name="Login" id="Login" class="btn btn-primary">Login</button>
-                </div>
-            </form>
-            <div class="col-md-4 "></div>
-        </div>
     </div>
 </body>
 
