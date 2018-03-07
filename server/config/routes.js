@@ -16,6 +16,9 @@ module.exports = function(app) {
     response.render("index");
   });
 
+  app.get("/admin/dashboard", function(request, response) {
+    response.render("dashboard");
+  });
   // Admin route - renders admin.ejs:
   app.get("/admin", function(request, response) {
     response.render("admin");
