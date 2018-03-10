@@ -103,6 +103,22 @@ io.sockets.on("connection", function(socket) {
     //Respond to client: emit another event and send a 'response' data object back to client:
     socket.emit("server_response", { response: "sockets are the best!" });
   });
+
+  socket.on("create", function(room) {
+    console.log("joined room");
+    socket.join(room);
+    io.to(room).emit("user_joined", { response: "user joined room " + room });
+  });
+
+  socket.on("join room", function(room) {
+    console.log("joined room");
+    socket.join(room);
+    io.to(room).emit("user_joined", { response: "user joined room " + room });
+  });
+
+  socket.on("tile_clicked", function(data) {
+    socket.broadcast.to(data.room).emit("server_response", { response: data });
+  });
 });
 
 ////////////////////////////////

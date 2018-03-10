@@ -33,7 +33,11 @@ module.exports = function(app) {
     response.redirect("/admin");
   });
 
-  //Login post route
+  //enter an individual learnup room
+  app.get("/room/:id", function(request, response) {
+    users.enterRoom(request, response);
+  });
+
   app.post("/login", function(request, response) {
     users.login(request, response);
   });
@@ -58,9 +62,4 @@ module.exports = function(app) {
   app.post("/delete/:id", function(request, response) {
     users.delete(request, response);
   });
-
-  // Another example route - responses with JSON object:
-  app.get("/users", function(request, response) {
-    controller.getControllerMethod(request, response); //<-- CHANGE "controller" variable name(2)
-  }); // <-- DO NOT ADD COMMAS if ADDING ROUTES BELOW.
 };

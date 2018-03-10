@@ -165,5 +165,19 @@ module.exports = {
         }
       });
     });
+  },
+  enterRoom: function(request, response) {
+    User.findOne({ _id: request.params.id })
+      .then(user => {
+        if (user) {
+          response.render("room", { id: user.id });
+        } else {
+          response.redirect("admin");
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        response.redirect("/admin");
+      });
   } // <--- ADD ADDITIONAL METHODS SEPARATED BY A COMMA ','
 };

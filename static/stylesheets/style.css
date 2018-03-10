@@ -53,3 +53,62 @@ table th {
 .action {
   padding: 0px !important;
 }
+
+.tile {
+  height: 5rem;
+  width: 5rem;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  margin: 0.25rem;
+  position: absolute;
+}
+
+.ib {
+  display: inline-block;
+}
+
+.red {
+  background-color: red;
+}
+
+.purple {
+  background-color: orchid;
+}
+
+.blue {
+  background-color: cornflowerblue;
+}
+
+#target {
+  height: 10rem;
+  width: 20rem;
+  margin: 1rem;
+  background-color: gray;
+  border-radius: 8px;
+  border: 2px dashed darkblue;
+  color: darkblue;
+  font-size: larger;
+  font-weight: bold;
+  line-height: 10rem;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.in-target {
+  border: 3px solid lawngreen;
+  border-radius: 8px;
+}
+
+.reset {
+  height: 3rem;
+  width: 5rem;
+  font-size: 1em;
+  font-weight: bold;
+  background: #1dad49;
+  border-radius: 8px;
+  box-shadow: 10px 10px 10px gray;
+}
