@@ -17,7 +17,8 @@ var UserSchema = new mongoose.Schema(
   {
     //<--- SET MODEL NAME & DESCRIBE MODEL'S SCHEMA
     email: { type: String, required: true },
-    hash: { type: String, required: true }
+    hash: { type: String, required: true },
+    admin: { type: Number, required: true }
   },
   { timestamps: true }
 );

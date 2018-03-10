@@ -43,3 +43,13 @@ table th {
 .header {
   text-align: center !important;
 }
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.action {
+  padding: 0px !important;
+}

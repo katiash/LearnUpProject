@@ -14,6 +14,8 @@ var bcrypt = require("bcrypt");
 const saltRounds = 10;
 const myPlaintextPassword = "Dojo2017";
 
+var users = require("./dummy_users");
+
 // STEP 2 (DB/SCHEMA SETUP): Connect to Mongoose:
 mongoose.connect("mongodb://localhost/learnup-db"); // <---- CHANGE DB NAME!
 
@@ -42,18 +44,30 @@ fs.readdirSync(models_path).forEach(function(file) {
   bcrypt.hash(myPlaintextPassword, saltRounds);
 
   //FOR TESTING ONLY - ADD DEFAULT USER - REMOVE BEFORE ADDING TO PRODUCTION
+
+  function addAccount(user) {
+    bcrypt.hash(user.password, saltRounds).then(new_hash => {
+      User.create({
+        email: user.email,
+        hash: new_hash,
+        admin: user.admin
+      }).then(result => console.log(result));
+    });
+  }
+
+  function addDummyAccounts(users) {
+    users.forEach(user => {
+      addAccount(user);
+    });
+  }
+
   var User = mongoose.model("User");
   User.findOne({ email: "omar.ihmoda@gmail.com" }, function(error, result) {
     if (error) {
       console.log(error);
     } else {
       if (!result) {
-        bcrypt.hash(myPlaintextPassword, saltRounds).then(new_hash => {
-          User.create({
-            email: "omar.ihmoda@gmail.com",
-            hash: new_hash
-          }).then(result => console.log(result));
-        });
+        addDummyAccounts(users);
       }
     }
   });

@@ -6,15 +6,19 @@
 // ==================================
 // Require 'session' Module (prior to invoking Express):
 var session = require("express-session");
+var cookieParser = require("cookie-parser");
 
 //Require flash messaging
 var flash = require("connect-flash");
-
 // Require the 'express' Module - to handle requests:
 var express = require("express");
 // Create an express application:
 // i.e. invoke 'express' Module and send it to 'app' variable:
 var app = express();
+
+//Tell express 'app' to use cookie-parser
+app.use(cookieParser());
+
 // Tell express 'app' to use 'session', and
 // give 'session' a dummy string for encryption:
 app.use(session({ secret: "codingdojorocks" }));
@@ -44,7 +48,9 @@ var path = require("path");
 
 // Require Mongoose Module (prior to routes section,  after 'app' variable definition).
 // Connects express 'app' to mongodb (Mongo database):
+
 var mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
 
 // Require Mongoose Configuration file:
 require("./server/config/mongoose.js");
