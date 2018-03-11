@@ -155,7 +155,20 @@ module.exports = {
     User.findOne({ _id: request.params.id })
       .then((user) => {
         if (user) {
-          response.render('room', { id: user.id });
+          var tiles = require('../../static/tiles.json');
+          response.render('board', {
+            id: user.id,
+            prefixes: tiles.sidetwo.prefixes,
+            endingsright: tiles.sidetwo.endingsright,
+            endingsbottom: tiles.sidetwo.endingsbottom,
+            roots: tiles.sidetwo.roots,
+            starstop: tiles.sideone.starstop,
+            starsleft: tiles.sideone.starsleft,
+            starsright: tiles.sideone.starsright,
+            starsbottom: tiles.sideone.starsbottom,
+            dipper: tiles.sideone.dipper,
+            crescent: tiles.sideone.crescent,
+            earth: tiles.sideone.earth});
         } else {
           response.redirect('admin');
         }
