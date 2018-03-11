@@ -16,8 +16,9 @@
             <h1>LearnUp Digital Reading Board Login</h1>
         </div>
 
-        <% if (message) { %>
-            <p>
+        <% if (message.length > 0) { %>
+            <p class="error-message">
+                ***
                 <%= message %>
             </p>
             <% } %>
