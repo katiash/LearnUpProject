@@ -39,23 +39,6 @@
     </div>
 </div>
 
-<!-- CLOSE ROOM MODAL -->
-<div class="modal fade" id="closeRoom" tabindex="-1" role="dialog" aria-labelledby="closeRoom" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Warning, Danger Ahead!</h5>
-            </div>
-            <div class="modal-body">
-                <h6>Are you sure you want to close this room?</h6>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" data-dismiss="modal">Close Room</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <body>
     <div class="container">
@@ -89,9 +72,6 @@
                             <div class="col-md-2"></div>
                             <div class="form-group col-md-4">
                                 <button type="submit" name="<%=user.id%>" id="genRoomButton" class="btn btn-block btn-primary">Generate Room</button>
-                            </div>
-                            <div class="form-group col-md-4 close-room" id="close-room-div">
-                                <button type="button" name="" class="btn btn-block btn-warning">Close Room</button>
                             </div>
                             <div class="col-md-2"></div>
                         </div>
@@ -138,34 +118,29 @@
                                                         <% } %>
 
                                         </td>
-                                        <td div>
+                                        <td>
                                             <div class="row">
-                                                <div class="col-md-3 action">
-                                                    <% if (user.admin >= 9) { %>
-                                                        <button type="button" name="" class="btn btn-warning actions" data-toggle="modal" data-target="#closeRoom">Close Room</button>
-                                                        <% } %>
-                                                </div>
-                                                <div class="col-md-3 action">
+                                                <div class="col-md-4 action">
 
                                                     <% if (user.admin > users[i].admin && user.email != users[i].email ) { %>
                                                         <button type="button" name="deleteuser" id="<%=users[i].id%>" class="btn btn-danger actions deleteuser" data-toggle="modal"
                                                             data-target="#deleteUser">Delete User</button>
                                                         <% } %>
                                                 </div>
-                                                <div class="col-md-3 action">
+                                                <div class="col-md-4 action">
                                                     <% if (user.admin > users [i].admin && user.email != users[i].email && users [i].admin < 9) { %>
                                                         <form method="post" action='/promote/<%=users[i].id %>'>
                                                             <button type="submit" name="promoteuser" class="btn btn-success actions">Promote User</button>
                                                         </form>
                                                         <% } %>
                                                 </div>
-                                                <div class="col-md-3 action">
+                                                <div class="col-md-4 action">
                                                     <% if (user.admin > users[i].admin && user.email != users[i].email && users[i].admin > 8) { %>
                                                         <form form method="post" action='/demote/<%=users[i].id %>'>
                                                             <button type="submit" name="demoteuser" class="btn btn-primary actions">Demote User</button>
                                                         </form>
                                                         <% } %>
-                                                </div>s
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -228,8 +203,6 @@
 </body>
 
 <script type="text/javascript">
-    document.getElementById('genRoomButton').addEventListener('click', closeRoom)
-    document.getElementById('close-room-div').addEventListener('click', resetRoom)
     document.getElementById('genRoomButton').addEventListener('click', createRoom)
     var deleteButtons = document.querySelectorAll('.deleteuser');
     var socket = io.connect()
@@ -238,25 +211,13 @@
         deleteButtons[i].addEventListener('click', deleteClicked)
     }
 
-    function closeRoom() {
-        document.getElementById('genRoomButton').innerHTML = "New Room"
-        document.getElementById('close-room-div').style.display = "inline"
-        document.getElementById('enterRoomButton').classList.remove("disabled")
-    }
-
-    function resetRoom() {
-        document.getElementById('close-room-div').style.display = "none"
-        document.getElementById('genRoomButton').innerHTML = "Generate Room"
-        document.getElementById('enterRoomButton').classList.add("disabled")
-    }
-
     function deleteClicked() {
         document.getElementById('deleteform').setAttribute("action", "/delete/" + this.id)
     }
 
     function createRoom() {
-        console.log("test")
         var room = document.getElementById('genRoomButton').getAttribute('name')
+        document.getElementById('enterRoomButton').classList.remove("disabled")
         document.getElementById('enterRoom').setAttribute("action", "/room/" + room)
         document.getElementById("meetingurl").setAttribute("value", "http://localhost:8000/room/" + room)
         socket.emit('create', room)
