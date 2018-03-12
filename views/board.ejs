@@ -25,7 +25,20 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
+            var roomName = document.getElementById('Welcome').getAttribute("name")
             var socket = io.connect();
+
+            function joinRoom() {
+                socket.emit("join room", roomName)
+            }
+
+            socket.on('user_joined', function (data) {
+                //Display 'data' received on the 'client' browser console:
+                console.log('The server says: ' + data.response);
+            });
+
+            joinRoom()
+
             interact('.draggable')
                 .draggable({
                     inertia: true,
@@ -75,23 +88,21 @@
                 target.style.webkitTransform =
                     target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
 
-                // update the posiion attributes 
+                // update the position attributes 
                 target.setAttribute('data-x', x);
                 target.setAttribute('data-y', y);
-                socket.emit('tile_clicked', {
-                    x: x,
-                    y: y,
-                    id: id
-                })
+
+
+                socket.emit('tile_clicked', { room: roomName, x: x, y: y, id: id })
             }
 
             socket.on('server_response', function (data) {
-                console.log("x coordinate: " + data.response.x)
-                console.log("y coordinate: " + data.response.y)
-                var d = document.getElementById(data.response.id)
-                d.style.position = "absolute";
-                d.style.left = data.response.x + 'px';
-                d.style.top = data.response.y + 'px';
+                var target = document.getElementById(data.response.id)
+                target.setAttribute('data-x', data.response.x);
+                target.setAttribute('data-y', data.response.y);
+                target.style.webkitTransform =
+                    target.style.transform = 'translate(' + data.response.x + 'px, ' + data.response.y + 'px)';
+
                 //data.response.target.setAttribute('data-x', data.response.x);
                 //data.response.target.setAttribute('data-y', data.response.y);
 
@@ -103,7 +114,7 @@
 <body>
     <div class="container">
         <div id="title">
-            <h2>Learning Board</h2>
+            <h2 id="Welcome" name='<%=id %>'>Learning Board</h2>
             <div class="text-right align-top ib">
                 <button class="btn btn-success ib" id="switch">Switch Sides</button>
                 <button class="btn btn-primary ib">Back to Dashboard</button>
