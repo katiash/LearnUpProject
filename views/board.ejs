@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Whiteboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.3/dist/interact.min.js"></script>
+
+    <link href="/stylesheets/board.css" rel="stylesheet" type="text/css">
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var socket = io.connect();
+            interact('.draggable')
+                .draggable({
+                    inertia: true,
+                    // restrict: {
+                    //     restriction: 'parent',
+                    //     elementRect: {
+                    //         top: 0,
+                    //         left: 0,
+                    //         bottom: 1,
+                    //         right: 1
+                    //     }
+                    // },
+                    onmove: dragMoveListener,
+                    onend: function (event) {
+                        // set target so we can measure the coordinates of it's final x/y coordinates    
+                        var target = event.target;
+                        // keep the dragged position in the data-x/data-y attributes 
+                        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    }
+                });
+            interact('.dropzone').dropzone({
+                ondragenter: function (event) {
+                    var draggableElement = event.relatedTarget,
+                        dropzoneElement = event.target;
+                    // add a class to know it's in the target
+                    draggableElement.classList.add('in-target');
+                },
+                ondragleave: function (event) {
+                    // remove the "in-target" class 
+                    event.relatedTarget.classList.remove('in-target');
+                },
+            });
+
+            function dragMoveListener(event) {
+                //grab object that will be dragged and set in target variable
+                var target = event.target
+
+                //get the id of the target
+                id = event.currentTarget.id
+
+                // keep the dragged position in the data-x/data-y attributes 
+                x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+                    y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+                // translate the element 
+                target.style.webkitTransform =
+                    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+
+                // update the posiion attributes 
+                target.setAttribute('data-x', x);
+                target.setAttribute('data-y', y);
+                socket.emit('tile_clicked', {
+                    x: x,
+                    y: y,
+                    id: id
+                })
+            }
+
+            socket.on('server_response', function (data) {
+                console.log("x coordinate: " + data.response.x)
+                console.log("y coordinate: " + data.response.y)
+                var d = document.getElementById(data.response.id)
+                d.style.position = "absolute";
+                d.style.left = data.response.x + 'px';
+                d.style.top = data.response.y + 'px';
+                //data.response.target.setAttribute('data-x', data.response.x);
+                //data.response.target.setAttribute('data-y', data.response.y);
+
+            })
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div id="title">
+            <h2>Learning Board</h2>
+            <div class="text-right align-top ib">
+                <button class="btn btn-success ib" id="switch">Switch Sides</button>
+                <button class="btn btn-primary ib">Back to Dashboard</button>
+            </div>
+        </div>
+        <h4>Front Side of Board</h4>
+        <div class="frontboard" id="sideone">
+            <div class="section" id="topone">
+                <% for (var x in starstop) { %>
+                    <div class="draggable ib" id=<%=starstop[x].text%>>
+                        <p class=<%=starstop[x].color%>>
+                            <%= starstop[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="section" id="leftone">
+                <% for (var x in starsleft) { %>
+                    <div class="draggable ib" id=<%=starsleft[x].text%>>
+                        <p class=<%=starsleft[x].color%>>
+                            <%= starsleft[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="section" id="centerone">
+                <div id="crescent">
+                    <% for (var x in crescent) { %>
+                        <div class="draggable ib" id=<%=crescent[x].text%>>
+                            <p class=<%=crescent[x].color%>>
+                                <%= crescent[x].text%>
+                            </p>
+                        </div>
+                        <% } %>
+                </div>
+                <div id="dipper">
+                    <% for (var x in dipper) { %>
+                        <div class="draggable ib" id=<%=dipper[x].text%>>
+                            <p class=<%=dipper[x].color%>>
+                                <%= dipper[x].text%>
+                            </p>
+                        </div>
+                        <% } %>
+                </div>
+                <div id="earth">
+                    <% for (var x in earth) { %>
+                        <div class="draggable ib" id=<%=earth[x].text%>>
+                            <p class=<%=earth[x].color%>>
+                                <%= earth[x].text%>
+                            </p>
+                        </div>
+                        <% } %>
+                </div>
+            </div>
+            <div class="section" id="rightone">
+                <% for (var x in starsright) { %>
+                    <div class="draggable ib" id=<%=starsright[x].text%>>
+                        <p class=<%=starsright[x].color%>>
+                            <%= starsright[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="section" id="bottomone">
+                <% for (var x in starsbottom) { %>
+                    <div class="draggable ib" id=<%=starsbottom[x].text%>>
+                        <p class=<%=starsbottom[x].color%>>
+                            <%= starsbottom[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+        <br>
+        <h4>Back Side of Board</h4>
+        <div class="backboard" id="sidetwo">
+            <div class="section" id="toptwo">
+                <% for (var x in roots) { %>
+                    <div class="draggable ib" id=<%=roots[x].text%>>
+                        <p class=<%=roots[x].color%>>
+                            <%= roots[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="section" id="lefttwo">
+                <% for (var x in prefixes) { %>
+                    <div class="draggable ib" id=<%=prefixes[x].text%>>
+                        <p class=<%=prefixes[x].color%>>
+                            <%= prefixes[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="section" id="righttwo">
+                <% for (var x in endingsright) { %>
+                    <div class="draggable ib" id=<%=endingsright[x].text%>>
+                        <p class=<%=endingsright[x].color%>>
+                            <%= endingsright[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div class="section" id="bottomtwo">
+                <% for (var x in endingsbottom) { %>
+                    <div class="draggable ib" id=<%=endingsbottom[x].text%>>
+                        <p class=<%=endingsbottom[x].color%>>
+                            <%= endingsbottom[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
