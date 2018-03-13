@@ -60,6 +60,7 @@ p {
   background: #1dad49;
   border-radius: 8px;
   box-shadow: 5px 5px 10px grey;
+  margin: 0.25rem;
 }
 
 .container {
@@ -114,7 +115,7 @@ p {
   text-align: center;
 }
 
-#starsrigth {
+#starsright {
   grid-column: 4/6;
   width: 55%;
   height: 30rem;
@@ -138,26 +139,26 @@ p {
   padding: 2rem;
 }
 
-#toptwo {
-  grid-column: 1/3;
+#roots {
+  grid-column: 1/4;
   padding-left: 5rem;
   width: 100%;
   height: 8rem;
 }
 
-#lefttwo {
+#prefixes {
   grid-column: 1/2;
   width: 100%;
   height: 20rem;
 }
 
-#righttwo {
+#endingsright {
   grid-column: 3/4;
   width: 100%;
   height: 20rem;
 }
 
-#bottomtwo {
+#endingsbottom {
   grid-column: 1/4;
   width: 100%;
   height: 5rem;

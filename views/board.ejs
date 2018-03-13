@@ -105,6 +105,8 @@
             function setBoard() {
                 $.get('http://localhost:8000/tiles').then((tiles) => {
                     const { earth, starstop, starsleft, starsright, starsbottom, dipper, crescent } = tiles.sideOne[0]
+                    const { prefixes, endingsright, endingsbottom, roots } = tiles.sideTwo[0]
+
                     const tileSets = [
                         { tiles: earth, name: "earth" },
                         { tiles: starstop, name: "starstop" },
@@ -112,7 +114,11 @@
                         { tiles: starsright, name: "starsright" },
                         { tiles: starsbottom, name: "starsbottom" },
                         { tiles: dipper, name: "dipper" },
-                        { tiles: crescent, name: "crescent" }
+                        { tiles: crescent, name: "crescent" },
+                        { tiles: prefixes, name: "prefixes" },
+                        { tiles: endingsright, name: "endingsright" },
+                        { tiles: endingsbottom, name: "endingsbottom" },
+                        { tiles: roots, name: "roots" }
                     ]
                     renderSet(tileSets)
 
@@ -121,12 +127,12 @@
 
             function renderSet(tileSets) {
                 tileSets.forEach((set) => {
-                    console.log(set)
+                    $(`#${set.name}`).html('')
                     set.tiles.forEach((tile) => {
                         $(`#${set.name}`).append(
                             `<div class='draggable ib' id=${tile.text}>
                         <p class=${tile.color}>
-                    ${ tile.text}
+                    ${tile.text}
                         </p >
                         </div >`
                         )
@@ -135,6 +141,15 @@
             }
 
             setBoard()
+
+            $("#reset").click(() => {
+                socket.emit("reset", { room: roomName })
+                setBoard()
+            })
+
+            socket.on("reset_tiles", function () {
+                setBoard()
+            })
         });
     </script>
 </head>
@@ -146,91 +161,45 @@
             <div class="text-right align-top ib">
                 <button class="btn btn-success ib" id="switch">Switch Sides</button>
                 <button class="btn btn-primary ib">Back to Dashboard</button>
+                <button class="btn btn-primary ib" id="reset">Reset Board</button>
             </div>
         </div>
 
         <h4>Front Side of Board</h4>
         <div class="frontboard" id="sideone">
-
             <div class="section" id="starstop">
             </div>
-
-            <div class="section" id="starsleft"></div>
-
-
-        </div>
-
-
-        <div class="section" id="topone">
-            <% for (var x in starstop) { %>
-                <div class="draggable ib" id=<%=starstop[x].text%>>
-                    <p class=<%=starstop[x].color%>>
-                        <%= starstop[x].text%>
-                    </p>
-                </div>
-                <% } %>
-        </div>
-        <div class="section" id="leftone">
-            <% for (var x in starsleft) { %>
-                <div class="draggable ib" id=<%=starsleft[x].text%>>
-                    <p class=<%=starsleft[x].color%>>
-                        <%= starsleft[x].text%>
-                    </p>
-                </div>
-                <% } %>
-        </div>
-        <div class="section" id="centerone">
-            <div id="crescent">
-                <% for (var x in crescent) { %>
-                    <div class="draggable ib" id=<%=crescent[x].text%>>
-                        <p class=<%=crescent[x].color%>>
-                            <%= crescent[x].text%>
-                        </p>
-                    </div>
-                    <% } %>
+            <div class="section" id="starsleft">
             </div>
-            <div id="dipper">
-                <% for (var x in dipper) { %>
-                    <div class="draggable ib" id=<%=dipper[x].text%>>
-                        <p class=<%=dipper[x].color%>>
-                            <%= dipper[x].text%>
-                        </p>
-                    </div>
-                    <% } %>
-            </div>
-            <div id="earth">
-                <% for (var x in earth) { %>
-                    <div class="draggable ib" id=<%=earth[x].text%>>
-                        <p class=<%=earth[x].color%>>
-                            <%= earth[x].text%>
-                        </p>
-                    </div>
-                    <% } %>
-            </div>
-        </div>
-        <div class="section" id="rightone">
-            <% for (var x in starsright) { %>
-                <div class="draggable ib" id=<%=starsright[x].text%>>
-                    <p class=<%=starsright[x].color%>>
-                        <%= starsright[x].text%>
-                    </p>
+
+            <div class="section" id="centerone">
+                <div id="crescent">
                 </div>
-                <% } %>
-        </div>
-        <div class="section" id="bottomone">
-            <% for (var x in starsbottom) { %>
-                <div class="draggable ib" id=<%=starsbottom[x].text%>>
-                    <p class=<%=starsbottom[x].color%>>
-                        <%= starsbottom[x].text%>
-                    </p>
+                <div id="dipper">
                 </div>
-                <% } %>
+                <div id="earth">
+                </div>
+            </div>
+            <div class="section" id="starsright">
+            </div>
+            <div class="section" id="starsbottom">
+            </div>
+
         </div>
 
 
         <br>
         <h4>Back Side of Board</h4>
         <div class="backboard" id="sidetwo">
+
+            <div class="section" id="roots">
+            </div>
+            <div class="section" id="prefixes">
+            </div>
+            <div class="section" id="endingsright">
+            </div>
+            <div class="section" id="endingsbottom">
+            </div>
 
         </div>
     </div>
