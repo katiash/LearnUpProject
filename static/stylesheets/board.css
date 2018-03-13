@@ -39,6 +39,10 @@
   background-color: yellow;
 }
 
+.moving {
+  box-shadow: 0px 0px 5px 8px cornflowerblue;
+}
+
 .reset {
   height: 3rem;
   width: 5rem;

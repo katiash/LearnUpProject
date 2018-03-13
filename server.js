@@ -122,6 +122,10 @@ io.sockets.on('connection', (socket) => {
     socket.broadcast.to(data.room).emit('server_response', { response: data });
   });
 
+  socket.on('finished_drag', (data) => {
+    socket.broadcast.to(data.room).emit('deselect', { response: data });
+  });
+
   socket.on('reset', (data) => {
     socket.broadcast.to(data.room).emit('reset_tiles');
   });
