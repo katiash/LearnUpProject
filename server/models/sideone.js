@@ -13,15 +13,19 @@ const mongoose = require('mongoose');
 
 // STEP 3 (DB/SCHEMA SETUP):
 // Name & Describe Schema:
-const UserSchema = new mongoose.Schema(
+const SideOneSchema = new mongoose.Schema(
   {
     // <--- SET MODEL NAME & DESCRIBE MODEL'S SCHEMA
-    email: { type: String, required: true },
-    hash: { type: String, required: true },
-    admin: { type: Number, required: true },
+    starstop: [{ text: String, color: String }],
+    starsleft: [{ text: String, color: String }],
+    starsright: [{ text: String, color: String }],
+    starsbottom: [{ text: String, color: String }],
+    dipper: [{ text: String, color: String }],
+    crescent: [{ text: String, color: String }],
+    earth: [{ text: String, color: String }],
   },
   { timestamps: true },
 );
 
 // Set this Schema in our Models as 'Schema_Instance':
-const User = mongoose.model('User', UserSchema); // <-- NAME YOUR MODEL INSTANCE
+mongoose.model('Sideone', SideOneSchema); // <-- NAME YOUR MODEL INSTANCE

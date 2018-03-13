@@ -41,34 +41,81 @@ fs.readdirSync(modelsPath).forEach((file) => {
     // Require each of the model.js files into current file:
     require(`${modelsPath}/${file}`);
   }
-
-  const User = mongoose.model('User');
-
-  bcrypt.hash(myPlaintextPassword, saltRounds);
-
-  // FOR TESTING ONLY - ADD DEFAULT USER - REMOVE BEFORE ADDING TO PRODUCTION
-
-  function addAccount(user) {
-    bcrypt.hash(user.password, saltRounds).then((hash) => {
-      User.create({
-        email: user.email,
-        hash,
-        admin: user.admin,
-      }).then(result => console.log(result));
-    });
-  }
-
-  function addDummyAccounts(dummyUsers) {
-    dummyUsers.forEach((user) => {
-      addAccount(user);
-    });
-  }
-
-  User.findOne({ email: 'omar.ihmoda@gmail.com' }, (error, result) => {
-    if (error) {
-      console.log(error);
-    } else if (!result) {
-      addDummyAccounts(users);
-    }
-  });
 });
+
+const User = mongoose.model('User');
+
+bcrypt.hash(myPlaintextPassword, saltRounds);
+
+// FOR TESTING ONLY - ADD DEFAULT USER - REMOVE BEFORE ADDING TO PRODUCTION
+
+function addAccount(user) {
+  bcrypt.hash(user.password, saltRounds).then((hash) => {
+    User.create({
+      email: user.email,
+      hash,
+      admin: user.admin,
+    }).then(result => console.log(result));
+  });
+}
+
+function addDummyAccounts(dummyUsers) {
+  dummyUsers.forEach((user) => {
+    addAccount(user);
+  });
+}
+
+User.findOne({ email: 'omar.ihmoda@gmail.com' }, (error, result) => {
+  if (error) {
+    console.log(error);
+  } else if (!result) {
+    addDummyAccounts(users);
+  }
+});
+
+// ADD TILES TO DB (if database not yet populated)
+
+const tiles = require('../../static/tiles.json');
+
+const Sideone = mongoose.model('Sideone');
+const Sidetwo = mongoose.model('Sidetwo');
+
+function addTiles(tiles) {
+  const {
+    starstop, starsleft, starsright, starsbottom, dipper, crescent, earth,
+  } = tiles.sideone;
+
+  const {
+    prefixes, endingsright, endingsbottom, roots,
+  } = tiles.sidetwo;
+
+  Sideone.create({
+    starstop,
+    starsright,
+    starsleft,
+    starsbottom,
+    dipper,
+    crescent,
+    earth,
+  })
+    .then(data => console.log(data))
+    .catch(error => console.log(error));
+
+  Sidetwo.create({
+    prefixes,
+    endingsright,
+    endingsbottom,
+    roots,
+  })
+    .then(data => console.log(data))
+    .catch(error => console.log(error));
+}
+
+Sideone.findOne({})
+  .then((tile) => {
+    if (tile) {
+    } else {
+      addTiles(tiles);
+    }
+  })
+  .catch(error => console.log(error));
