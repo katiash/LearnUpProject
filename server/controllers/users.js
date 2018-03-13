@@ -155,9 +155,17 @@ module.exports = {
     User.findOne({ _id: request.params.id })
       .then((user) => {
         if (user) {
+          var isadmin;
+          if (request.session.user) {
+            isadmin = true;
+          }
+          else {
+            isadmin = false;
+          }
           var tiles = require('../../static/tiles.json');
           response.render('board', {
             id: user.id,
+            admin: isadmin,
             prefixes: tiles.sidetwo.prefixes,
             endingsright: tiles.sidetwo.endingsright,
             endingsbottom: tiles.sidetwo.endingsbottom,

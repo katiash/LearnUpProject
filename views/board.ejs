@@ -49,23 +49,17 @@
                     onend: function (event) {
                         // set target so we can measure the coordinates of it's final x/y coordinates    
                         var target = event.target;
+
+                        //get the id of the target 
+                        id = event.currentTarget.id
+                        
                         // keep the dragged position in the data-x/data-y attributes 
                         x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
                             y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                        target.classList.remove('moving');
+                        socket.emit('finished_drag', { room: roomName, id: id })
                     }
                 });
-            interact('.dropzone').dropzone({
-                ondragenter: function (event) {
-                    var draggableElement = event.relatedTarget,
-                        dropzoneElement = event.target;
-                    // add a class to know it's in the target
-                    draggableElement.classList.add('in-target');
-                },
-                ondragleave: function (event) {
-                    // remove the "in-target" class 
-                    event.relatedTarget.classList.remove('in-target');
-                },
-            });
 
             function dragMoveListener(event) {
                 //grab object that will be dragged and set in target variable
@@ -86,6 +80,8 @@
                 target.setAttribute('data-x', x);
                 target.setAttribute('data-y', y);
 
+                //highlight tile 
+                target.classList.add('moving');
 
                 socket.emit('tile_clicked', { room: roomName, x: x, y: y, id: id })
             }
@@ -94,12 +90,18 @@
                 var target = document.getElementById(data.response.id)
                 target.setAttribute('data-x', data.response.x);
                 target.setAttribute('data-y', data.response.y);
+                target.classList.add('moving');
                 target.style.webkitTransform =
                     target.style.transform = 'translate(' + data.response.x + 'px, ' + data.response.y + 'px)';
 
                 //data.response.target.setAttribute('data-x', data.response.x);
                 //data.response.target.setAttribute('data-y', data.response.y);
 
+            })
+
+            socket.on('deselect', function (data) {
+                var target = document.getElementById(data.response.id)
+                target.classList.remove('moving');
             })
 
             function setBoard() {
@@ -158,11 +160,13 @@
     <div class="container">
         <div id="title">
             <h2 id="Welcome" name='<%=id %>'>Learning Board</h2>
+            <% if (admin) {%>
             <div class="text-right align-top ib">
                 <button class="btn btn-success ib" id="switch">Switch Sides</button>
-                <button class="btn btn-primary ib">Back to Dashboard</button>
+                <a href="/admin/dashboard"><button class="btn btn-primary ib">Back to Dashboard</button></a>
                 <button class="btn btn-warning ib" id="reset">Reset Board</button>
             </div>
+            <% } %>
         </div>
 
         <h4>Front Side of Board</h4>
