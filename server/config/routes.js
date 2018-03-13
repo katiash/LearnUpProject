@@ -8,6 +8,7 @@
 // ( Change the "controller" variable name and the controller file name
 // within the 'controllers' directory. )
 const users = require('../controllers/users.js');
+const tiles = require('../controllers/tiles.js');
 
 // Export all routes to server.js:
 module.exports = function (app) {
@@ -36,6 +37,10 @@ module.exports = function (app) {
   // enter an individual learnup room
   app.get('/room/:id', (request, response) => {
     users.enterRoom(request, response);
+  });
+
+  app.get('/tiles', (request, response) => {
+    tiles.getTiles(request, response);
   });
 
   app.post('/login', (request, response) => {

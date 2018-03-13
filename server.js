@@ -121,4 +121,8 @@ io.sockets.on('connection', (socket) => {
   socket.on('tile_clicked', (data) => {
     socket.broadcast.to(data.room).emit('server_response', { response: data });
   });
+
+  socket.on('reset', (data) => {
+    socket.broadcast.to(data.room).emit('reset_tiles');
+  });
 });

@@ -13,15 +13,16 @@ const mongoose = require('mongoose');
 
 // STEP 3 (DB/SCHEMA SETUP):
 // Name & Describe Schema:
-const UserSchema = new mongoose.Schema(
+const SideTwoSchema = new mongoose.Schema(
   {
     // <--- SET MODEL NAME & DESCRIBE MODEL'S SCHEMA
-    email: { type: String, required: true },
-    hash: { type: String, required: true },
-    admin: { type: Number, required: true },
+    prefixes: [{ text: String, color: String }],
+    endingsright: [{ text: String, color: String }],
+    endingsbottom: [{ text: String, color: String }],
+    roots: [{ text: String, color: String }],
   },
   { timestamps: true },
 );
 
 // Set this Schema in our Models as 'Schema_Instance':
-const User = mongoose.model('User', UserSchema); // <-- NAME YOUR MODEL INSTANCE
+mongoose.model('Sidetwo', SideTwoSchema); // <-- NAME YOUR MODEL INSTANCE
