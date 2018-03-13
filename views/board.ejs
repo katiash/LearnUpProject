@@ -105,22 +105,33 @@
             function setBoard() {
                 $.get('http://localhost:8000/tiles').then((tiles) => {
                     const { earth, starstop, starsleft, starsright, starsbottom, dipper, crescent } = tiles.sideOne[0]
-
-                    renderSet(starstop)
+                    const tileSets = [
+                        { tiles: earth, name: "earth" },
+                        { tiles: starstop, name: "starstop" },
+                        { tiles: starsleft, name: "starsleft" },
+                        { tiles: starsright, name: "starsright" },
+                        { tiles: starsbottom, name: "starsbottom" },
+                        { tiles: dipper, name: "dipper" },
+                        { tiles: crescent, name: "crescent" }
+                    ]
+                    renderSet(tileSets)
 
                 });
             }
 
-            function renderSet(tileSet) {
-                tileSet.forEach((tile) => {
-                    $("#topone").append(
-                        `<div class='draggable ib' id=${tile.text}>
+            function renderSet(tileSets) {
+                tileSets.forEach((set) => {
+                    console.log(set)
+                    set.tiles.forEach((tile) => {
+                        $(`#${set.name}`).append(
+                            `<div class='draggable ib' id=${tile.text}>
                         <p class=${tile.color}>
-                                ${tile.text}
-                        </p>
-                        </div>`
-                    )
-                })
+                    ${ tile.text}
+                        </p >
+                        </div >`
+                        )
+                    })
+                });
             }
 
             setBoard()
@@ -141,14 +152,82 @@
         <h4>Front Side of Board</h4>
         <div class="frontboard" id="sideone">
 
-
-
-
-            <div class="section" id="topone">
-
+            <div class="section" id="starstop">
             </div>
 
+            <div class="section" id="starsleft"></div>
+
+
         </div>
+
+
+        <div class="section" id="topone">
+            <% for (var x in starstop) { %>
+                <div class="draggable ib" id=<%=starstop[x].text%>>
+                    <p class=<%=starstop[x].color%>>
+                        <%= starstop[x].text%>
+                    </p>
+                </div>
+                <% } %>
+        </div>
+        <div class="section" id="leftone">
+            <% for (var x in starsleft) { %>
+                <div class="draggable ib" id=<%=starsleft[x].text%>>
+                    <p class=<%=starsleft[x].color%>>
+                        <%= starsleft[x].text%>
+                    </p>
+                </div>
+                <% } %>
+        </div>
+        <div class="section" id="centerone">
+            <div id="crescent">
+                <% for (var x in crescent) { %>
+                    <div class="draggable ib" id=<%=crescent[x].text%>>
+                        <p class=<%=crescent[x].color%>>
+                            <%= crescent[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div id="dipper">
+                <% for (var x in dipper) { %>
+                    <div class="draggable ib" id=<%=dipper[x].text%>>
+                        <p class=<%=dipper[x].color%>>
+                            <%= dipper[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+            <div id="earth">
+                <% for (var x in earth) { %>
+                    <div class="draggable ib" id=<%=earth[x].text%>>
+                        <p class=<%=earth[x].color%>>
+                            <%= earth[x].text%>
+                        </p>
+                    </div>
+                    <% } %>
+            </div>
+        </div>
+        <div class="section" id="rightone">
+            <% for (var x in starsright) { %>
+                <div class="draggable ib" id=<%=starsright[x].text%>>
+                    <p class=<%=starsright[x].color%>>
+                        <%= starsright[x].text%>
+                    </p>
+                </div>
+                <% } %>
+        </div>
+        <div class="section" id="bottomone">
+            <% for (var x in starsbottom) { %>
+                <div class="draggable ib" id=<%=starsbottom[x].text%>>
+                    <p class=<%=starsbottom[x].color%>>
+                        <%= starsbottom[x].text%>
+                    </p>
+                </div>
+                <% } %>
+        </div>
+
+
         <br>
         <h4>Back Side of Board</h4>
         <div class="backboard" id="sidetwo">
