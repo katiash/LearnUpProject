@@ -126,6 +126,14 @@ io.sockets.on('connection', (socket) => {
     socket.broadcast.to(data.room).emit('deselect', { response: data });
   });
 
+  socket.on('hoveron', (data) => {
+    socket.broadcast.to(data.room).emit('hover_on', { response: data });
+  });
+
+  socket.on('hoveroff', (data) => {
+    socket.broadcast.to(data.room).emit('hover_off', { response: data });
+  });
+
   socket.on('reset', (data) => {
     socket.broadcast.to(data.room).emit('reset_tiles');
   });

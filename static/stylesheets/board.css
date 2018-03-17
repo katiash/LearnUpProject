@@ -43,6 +43,10 @@
   box-shadow: 0px 0px 5px 8px cornflowerblue;
 }
 
+.magenta {
+ box-shadow: 0px 0px 5px 8px magenta;
+}
+
 .reset {
   height: 3rem;
   width: 5rem;
