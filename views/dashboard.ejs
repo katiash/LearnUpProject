@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dashboard</title>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         $(document).ready(function(){
             $('#genRoomButton').click(function(){
                     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -25,16 +25,12 @@
                         var rnum = Math.floor(Math.random() * chars.length);
                         uniqueRoomId += chars.substring(rnum,rnum+1);
                     }
-                $('#genRoomUrl').val(`www.localhost:8000/room/${uniqueRoomId}`);
+                $('#meetingurl').val(`www.localhost:8000/room/${uniqueRoomId}`);
                 $('#enterRoom').removeAttr('disabled');
                 $('#enterRoom').removeClass("disabled");
             })
-            $('#closeRoomButton').click(function(){
-                $('#enterRoom').attr('disabled', "disabled");
-                $('#enterRoom').addClass("disabled");
-            })
         })
-    </script>
+    </script> -->
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
 </head>
@@ -62,30 +58,50 @@
 
 <body>
     <div class="container">
-
-        <h3>Welcome to the LearnUp Dashboard!</h3>
-        <div class="row gen-room">
-            <div class="col-md-2"></div>
-            <div class="col-md-6">
-                <div class="row">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <p> Logged in as
+                    <%=user.email%>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <h3>Welcome to the LearnUp Dashboard!</h3>
+            </div>
+            <form class="col-md-2" method="get" action="/logout">
+                <button type="submit" name="logout" class="btn btn-primary">Logout</button>
+            </form>
+        </div>
+        <% if (message.length > 0) { %>
+            <p class="error-message">
+                ***
+                <%= message %>
+            </p>
+            <% } %>
+                <div class="row gen-room">
                     <div class="col-md-2"></div>
-                    <div class="form-group col-md-4">
-                        <button type="button" name="" id="genRoomButton" class="btn btn-block btn-primary">Generate Room</button>
-                    </div>
-                    <div class="form-group col-md-4 close-room" id="close-room-div">
-                        <button type="button" id="closeRoomButton"name="" class="btn btn-block btn-warning">Close Room</button>
-                    </div>
-                    <div class="col-md-2"></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <input type="text" id="genRoomUrl" class="form-control" name="" placeholder="" >
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="form-group col-md-4">
+                                <button type="submit" name="<%=user.id%>" id="genRoomButton" class="btn btn-block btn-primary">Generate Room</button>
+                            </div>
+                            <div class="col-md-2"></div>
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <button type="button" name="" id="enterRoom" class="btn btn-primary disabled" disabled>Enter Room</button>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="meetingurl" placeholder="">
+                                </div>
+                            </div>
+                            <form id="enterRoom" class="col-md-4" method="get">
+                                <div class="form-group">
+                                    <button type="submit" name="" id="enterRoomButton" class="btn btn-primary disabled" disabled>Enter Room</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="col-md-2"></div>
@@ -203,24 +219,26 @@
 </body>
 
 <script type="text/javascript">
-    document.getElementById('genRoomButton').addEventListener('click', createRoom)
+    document.getElementById('genRoomButton').addEventListener('click', createRoom);
     var deleteButtons = document.querySelectorAll('.deleteuser');
-    var socket = io.connect()
+    var socket = io.connect();
 
     for (var i = 0; i < deleteButtons.length; i++) {
-        deleteButtons[i].addEventListener('click', deleteClicked)
+        deleteButtons[i].addEventListener('click', deleteClicked);
     }
 
     function deleteClicked() {
-        document.getElementById('deleteform').setAttribute("action", "/delete/" + this.id)
+        document.getElementById('deleteform').setAttribute("action", "/delete/" + this.id);
     }
 
     function createRoom() {
-        var room = document.getElementById('genRoomButton').getAttribute('name')
-        document.getElementById('enterRoomButton').classList.remove("disabled")
-        document.getElementById('enterRoom').setAttribute("action", "/room/" + room)
-        document.getElementById("meetingurl").setAttribute("value", "http://localhost:8000/room/" + room)
-        socket.emit('create', room)
+        var room = document.getElementById('genRoomButton').getAttribute('name');
+        document.getElementById('enterRoomButton').classList.remove("disabled");
+        $('#enterRoom').removeAttr('disabled');
+
+        document.getElementById('enterRoom').setAttribute("action", "/room/" + room);
+        document.getElementById("meetingurl").setAttribute("value", "http://localhost:8000/room/" + room);
+        socket.emit('create', room);
     }
 
     socket.on('user_joined', function (data) {
