@@ -81,15 +81,17 @@
                 target.setAttribute('data-y', y);
 
                 //highlight tile 
+                target.classList.remove('magenta');
                 target.classList.add('moving');
 
                 socket.emit('tile_clicked', { room: roomName, x: x, y: y, id: id })
             }
 
             socket.on('server_response', function (data) {
-                var target = document.getElementById(data.response.id)
+                var target = document.getElementById(data.response.id);
                 target.setAttribute('data-x', data.response.x);
                 target.setAttribute('data-y', data.response.y);
+                target.classList.remove('magenta');
                 target.classList.add('moving');
                 target.style.webkitTransform =
                     target.style.transform = 'translate(' + data.response.x + 'px, ' + data.response.y + 'px)';
@@ -102,6 +104,11 @@
             socket.on('deselect', function (data) {
                 var target = document.getElementById(data.response.id)
                 target.classList.remove('moving');
+            })
+
+             $("#reset").click(() => {
+                socket.emit("reset", { room: roomName })
+                setBoard()
             })
 
             function setBoard() {
@@ -123,6 +130,28 @@
                         { tiles: roots, name: "roots" }
                     ]
                     renderSet(tileSets)
+
+                    //set up the highlight listeners for hover/mouseover event
+                    $("div.draggable").hover(function (event) {
+                        $(this).addClass('magenta');
+                        socket.emit("hoveron", { room: roomName, id: event.currentTarget.id });
+
+                    }, function (event) {
+                        $(this).removeClass('magenta');
+                        socket.emit("hoveroff", { room: roomName, id: event.currentTarget.id });
+                    }
+                    );
+
+                    //set up the socket events for hover / mouseover event
+                    socket.on('hover_on', (data) => {
+                        var target = document.getElementById(data.response.id)
+                        target.classList.add('magenta');
+                    })
+
+                    socket.on('hover_off', (data) => {
+                        var target = document.getElementById(data.response.id)
+                        target.classList.remove('magenta');
+                    })
 
                 });
             }

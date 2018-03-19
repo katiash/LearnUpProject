@@ -16,6 +16,55 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dashboard</title>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.17.0/dist/jquery.validate.min.js"></script>
+    
+    <script>
+    $(document).ready(function () {
+            console.log("Document Ready");
+            // validate register email field on keyup and submit
+            $("#registernew").validate({
+                rules: {
+                    newuseremail: {
+                        required: true,
+                        email: true,
+                    }
+                },
+                messages: {
+                    newuseremail: "Please enter a valid email address"
+                }
+            });
+
+            // validate edit profile fields on keyup and submit
+            $("#editexisting").validate({
+                rules: {
+                    edituseremail: {
+                        required: true,
+                        email: true,
+                    },
+                    edituserpassword: {
+                        required: false,
+                        minlength: 8
+                    },
+                    edituserconfirmpw: {
+                        required: false,
+                        minlength: 8,
+                        equalTo: "#password",
+                    }
+
+                },
+                messages: {
+                    edituseremail: "Please enter a valid email address",
+                    edituserpassword: {
+                        minlength: "Passwords must be at least 8 characters"
+                    },
+                    edituserconfirmpw: {
+                        equalTo: "Passwords do not match"
+                    }
+
+                }
+            });
+        });
+    </script>
 
 </head>
 
@@ -152,11 +201,12 @@
                         <h4>Create / Edit User Accounts</h4>
                         <div class="row management">
                             <div class="col-md-1"></div>
-                            <form class="col-md-5 admin-tools" method='post' action="/new">
+                            <form class="col-md-5 admin-tools" name="registernew" id="registernew" method='post' action="/new">
                                 <h5>Register New User</h5>
                                 <div class="form-group">
                                     <label for="newuseremail">Email</label>
-                                    <input type="text" class="form-control" name="newuseremail" placeholder="Enter email">
+                                    <input type="text" class="form-control"  name="newuseremail" placeholder="Enter email">
+                                    <label id="newuseremail-error" class="error" for="newuseremail"></label>
                                 </div>
                                 <div class="form-group">
                                     <label for="newuseradmin">Admin Level</label>
@@ -170,11 +220,12 @@
                                 </div>
                             </form>
 
-                            <form class="col-md-5 admin-tools" method="post" action="/edit">
+                            <form class="col-md-5 admin-tools" name="editexisting" id="editexisting" method="post" action="/edit">
                                 <h5>Edit Existing User</h5>
                                 <div class="form-group">
                                     <label for="edituseremail">Email</label>
                                     <input type="text" class="form-control" name="edituseremail" placeholder="Enter user email">
+                                    <label id="edituseremail-error" class="error" for="edituseremail"></label>
                                 </div>
                                 <div class="form-group">
                                     <label for="edituseradmin">Admin Level</label>
@@ -186,10 +237,12 @@
                                 <div class="form-group">
                                     <label for="password">Password</label>
                                     <input type="password" class="form-control" name="edituserpassword" placeholder="Enter new password">
+                                    <label id="edituserpassword-error" class="error" for="password"></label>
                                 </div>
                                 <div class="form-group">
                                     <label for="confirmpw">Confirm PW</label>
                                     <input type="password" class="form-control" name="edituserconfirmpw" placeholder="Confirm new password">
+                                    <label id="edituserconfirmpw-error" class="error" for="confirmpw"></label>
                                 </div>
                                 <div class="form-group">
                                     <button type="submit" name="" class="btn btn-primary pull-right">Edit User</button>

@@ -50,6 +50,11 @@ table th {
   font-size: 16px;
 }
 
+.error {
+  color: red;
+  font-style: italic;
+}
+
 .action {
   padding: 0px !important;
 }
