@@ -23,5 +23,5 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// Set this Schema in our Models as 'Schema_Instance':
-const User = mongoose.model('User', UserSchema); // <-- NAME YOUR MODEL INSTANCE
+// Set this Schema in our Models as 'Schema_Instance' (this is a table/collection name):
+mongoose.model('User', UserSchema); // <-- NAME YOUR MODEL INSTANCE
