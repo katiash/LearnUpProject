@@ -20,24 +20,28 @@ const User = mongoose.model('User');
 
 module.exports = {
   // EXAMPLE OF A CRUD get REQUEST method:
-  login(request, response) {
-    User.findOne({ email: request.body.email }).then((user) => {
-      if (user) {
-        bcrypt.compare(request.body.password, user.hash).then((res) => {
-          if (res) {
-            request.session.user = user.email;
-            response.redirect('/admin/dashboard');
-          } else {
-            request.flash('error', 'Incorrect password or username');
-            response.redirect('/admin');
-          }
+  // https://www.npmjs.com/package/bcrypt#with-promises
+  login (request, response) {
+    User.findOne({ email: request.body.email })
+      .then((result) => {
+        bcrypt.compare(request.body.password, result.hash)
+        .then(() =>{
+          request.session.user = request.body.email;
+          response.redirect('/admin/dashboard');
+        })
+        .catch((err) =>{
+          console.log('Error received on bcrypt compare, ', err);
+          request.flash('error', 'Incorrect password (or username) ');
+          response.redirect('/admin');
         });
-      } else {
-        request.flash('error', 'Incorrect password or username');
+      })
+      .catch((error) => {
+        console.log('Did not find this user email address, ', error);
+        request.flash('error', 'Incorrect username (or password)');
         response.redirect('/admin');
-      }
-    });
+      });
   },
+
   dashboard(request, response) {
     User.findOne({ email: request.session.user }).then((user) => {
       User.find()
