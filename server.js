@@ -32,21 +32,24 @@ require('./server/config/mongoose.js');
 
 // Require Mongoose Module (prior to routes section,  after 'app' variable definition).
 // Connects express 'app' to mongodb (Mongo database):
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const connection = mongoose.createConnection("mongodb://localhost/learnup-db/session");
-// Because we import the mongoose.js file first, the mongoose is already set up with a promiseLibrary. Otherwise do:
+const connection = mongoose.createConnection('mongodb://localhost/learnup-db/session');
+// Because we import the mongoose.js file first, the mongoose is already set up with
+// a promiseLibrary. Otherwise do:
 // mongoose.createConnection("mongodb://localhost/learnup-db/session", {promiseLibrary: global.Promise});
 
 // Tell express 'app' to use 'session', and
 // give 'session' a dummy string for encryption:
-app.use(session({ secret: 'codingdojorocks',
-// https://www.npmjs.com/package/express-session#cookiesecure 
-// (add the "resave" and the "saveUninitialized" options to avoid session module [none were set] warnings)
-                  resave: false, // don't save session if unmodified
-                  saveUninitialized: false, // don't create session until something stored
-                  store: new MongoStore({ mongooseConnection: connection})
-                    // https://www.npmjs.com/package/connect-mongo (for advance usage with mongoOptions)
+app.use(session({
+  secret: 'codingdojorocks',
+  // https://www.npmjs.com/package/express-session#cookiesecure
+  // (add the "resave" and the "saveUninitialized" options,
+  // to avoid session module [none were set] warnings for these options)
+  resave: false, // don't save session if unmodified
+  saveUninitialized: false, // don't create session until something stored
+  store: new MongoStore({ mongooseConnection: connection }),
+  // https://www.npmjs.com/package/connect-mongo (for advance usage with mongoOptions)
 }));
 
 app.use(flash());

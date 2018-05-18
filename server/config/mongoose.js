@@ -16,7 +16,7 @@ mongoose.Promise = global.Promise;
 
 // STEP 2 (DB/SCHEMA SETUP): Connect to Mongoose:
 // http://mongoosejs.com/docs/connections.html#use-mongo-client (will avoid the open() deprec warning on connect())
-mongoose.connect('mongodb://localhost/learnup-db', {useMongoClient: true}); // <---- CHANGE DB NAME
+mongoose.connect('mongodb://localhost/learnup-db', { useMongoClient: true }); // <---- CHANGE DB NAME
 // Or, if you already have a connection, use .openUri()
 // connection.openUri('mongodb://localhost/myapp', { /* options */ });
 
@@ -39,7 +39,11 @@ const modelsPath = path.join(__dirname, './../models');
 fs.readdirSync(modelsPath).forEach((file) => {
   if (file.indexOf('.js') >= 0) {
     // Require each of the model.js files into current file:
+    /* eslint-disable global-require */
+    /* eslint-disable import/no-dynamic-require */
     require(`${modelsPath}/${file}`);
+    /* eslint-enable import/no-dynamic-require */
+    /* eslint-enable global-require */
   }
 });
 
@@ -48,7 +52,8 @@ fs.readdirSync(modelsPath).forEach((file) => {
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const myPlaintextPassword = 'Dojo2017';
+// CAN REMOVE THIS LINE (used in earlier version to assign password to first dummy user):
+// const myPlaintextPassword = 'Dojo2017';
 
 // IMPORT dummy users data FROM 'dummy_users' file IN THIS DIRECTORY:
 const users = require('./dummy_users');
@@ -61,7 +66,7 @@ function addAccount(user) {
       email: user.email,
       hash,
       admin: user.admin,
-    }).then(result => console.log("Dummy user created: ", result));
+    }).then(result => console.log('Dummy user created: ', result));
   });
 }
 
@@ -72,11 +77,11 @@ function addDummyAccounts(dummyUsers) {
 }
 
 User.findOne({ email: 'omar.ihmoda@gmail.com' }, (error, result) => {
-  console.log("In mongoose.js: findOne({omar.ihmoda@gmail.com})");
+  console.log('In mongoose.js: findOne({omar.ihmoda@gmail.com})');
   if (error) {
-    console.log("In mongoose file with error on find user email method:", error);
+    console.log('In mongoose file with error on find user email method:', error);
   } else if (!result) {
-    console.log("In mongoose.js: findOne({omar.ihmoda@gmail.com}) - no result returned, creating default users...");
+    console.log('In mongoose.js: findOne({omar.ihmoda@gmail.com}) - no result returned, creating default users...');
     addDummyAccounts(users);
   }
 });
@@ -87,14 +92,14 @@ const tiles = require('../../static/tiles.json');
 const Sideone = mongoose.model('Sideone');
 const Sidetwo = mongoose.model('Sidetwo');
 
-function addTiles(tiles) {
+function addTiles(tilesArg) {
   const {
     starstop, starsleft, starsright, starsbottom, dipper, crescent, earth,
-  } = tiles.sideone;
+  } = tilesArg.sideone;
 
   const {
     prefixes, endingsright, endingsbottom, roots,
-  } = tiles.sidetwo;
+  } = tilesArg.sidetwo;
 
   Sideone.create({
     starstop,
@@ -120,8 +125,7 @@ function addTiles(tiles) {
 
 Sideone.findOne({})
   .then((tile) => {
-    if (tile) {
-    } else {
+    if (!tile) {
       addTiles(tiles);
     }
   })

@@ -21,19 +21,19 @@ const User = mongoose.model('User');
 module.exports = {
   // EXAMPLE OF A CRUD get REQUEST method:
   // https://www.npmjs.com/package/bcrypt#with-promises
-  login (request, response) {
+  login(request, response) {
     User.findOne({ email: request.body.email })
       .then((result) => {
         bcrypt.compare(request.body.password, result.hash)
-        .then(() =>{
-          request.session.user = request.body.email;
-          response.redirect('/admin/dashboard');
-        })
-        .catch((err) =>{
-          console.log('Error received on bcrypt compare, ', err);
-          request.flash('error', 'Incorrect password (or username) ');
-          response.redirect('/admin');
-        });
+          .then(() => {
+            request.session.user = request.body.email;
+            response.redirect('/admin/dashboard');
+          })
+          .catch((err) => {
+            console.log('Error received on bcrypt compare, ', err);
+            request.flash('error', 'Incorrect password (or username) ');
+            response.redirect('/admin');
+          });
       })
       .catch((error) => {
         console.log('Did not find this user email address, ', error);
@@ -159,14 +159,15 @@ module.exports = {
     User.findOne({ _id: request.params.id })
       .then((user) => {
         if (user) {
-          var isadmin;
+          let isadmin;
           if (request.session.user) {
             isadmin = true;
-          }
-          else {
+          } else {
             isadmin = false;
           }
-          var tiles = require('../../static/tiles.json');
+          /* eslint-disable global-require */
+          const tiles = require('../../static/tiles.json');
+          /* eslint-enable global-require */
           response.render('board', {
             id: user.id,
             admin: isadmin,
@@ -180,7 +181,8 @@ module.exports = {
             starsbottom: tiles.sideone.starsbottom,
             dipper: tiles.sideone.dipper,
             crescent: tiles.sideone.crescent,
-            earth: tiles.sideone.earth});
+            earth: tiles.sideone.earth,
+          });
         } else {
           response.redirect('admin');
         }

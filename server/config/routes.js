@@ -11,7 +11,7 @@ const users = require('../controllers/users.js');
 const tiles = require('../controllers/tiles.js');
 
 // Export all routes to server.js:
-module.exports = function (app) {
+module.exports = (app) => {
   // Root route - renders index.ejs view (for socket.io example):
   app.get('/', (request, response) => {
     response.render('index');

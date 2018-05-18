@@ -1,5 +1,5 @@
 {
-  "name": "dojo_weather",
+  "name": "LearnUp",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -21,6 +21,7 @@
     "express-session": "^1.15.6",
     "jquery-validation": "^1.17.0",
     "mongoose": "^4.13.12",
+    "nodemon": "^1.17.4",
     "path": "^0.12.7",
     "socket.io": "^2.0.4"
   },
